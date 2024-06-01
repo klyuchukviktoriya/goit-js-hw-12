@@ -75,6 +75,10 @@ body {
   height: 40px;
 }
 
+.button:hover {
+  background-color: #6c8cff;
+}
+
 .gallery {
   margin: 0 auto;
   width: 1440px;
