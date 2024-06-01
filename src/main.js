@@ -3,26 +3,28 @@ import { renderGallery, showLoader, hideLoader, clearGallery } from "./js/render
 
 const searchForm = document.querySelector(".form");
 const input = document.querySelector(".input");
-
-searchForm.addEventListener("submit", (event) => {
+const loadMore = document.querySelector(".js-load-more");
+loadMore.style.display = "none";
+searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearGallery()
     const query = input.value.trim();
-    if (!query) {
+    if (query.length === 0) {
         showError();
         return;
     }
 
     showLoader();
     input.value = "";
-    fetchImages(query)
-        .then(images => {
-            renderGallery(images);
-        })
-        .catch(error => {
-            showError(message, error);
-        })
-        .finally(() => {
-            hideLoader();
-        });
+
+    try {
+        const images = await fetchImages(query);
+        renderGallery(images);
+
+    } catch (error) {
+        console.log(error.message);
+    }
+    finally {
+        hideLoader();
+    }
 });

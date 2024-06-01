@@ -192,3 +192,9 @@ body {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
+
+.js-load-more.button {
+  /* display: none; */
+  width: 125px;
+  margin: 40px auto;
+}
