@@ -7,9 +7,11 @@ const loadMore = document.querySelector(".js-load-more");
 loadMore.style.display = "none";
 
 searchForm.addEventListener("submit", async (event) => {
+
     event.preventDefault();
     clearGallery();
     const query = input.value.trim();
+
     if (query.length === 0) {
         showError();
         loadMore.style.display = "none";

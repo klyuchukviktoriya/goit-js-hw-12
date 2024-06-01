@@ -1,7 +1,8 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import axios from "axios";
-const loadMore = document.querySelector(".js-load-more")
+const loadMore = document.querySelector(".js-load-more");
+
 export function showError() {
     iziToast.error({
         icon: "",
@@ -41,6 +42,7 @@ export async function fetchImages(query, page = 1) {
         } else {
             return data.hits;
         }
+
     } catch (error) {
         console.error(error.message);
     }

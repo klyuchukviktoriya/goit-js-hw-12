@@ -9,6 +9,7 @@ const gallery = document.querySelector(".gallery");
 const loadMore = document.querySelector(".js-load-more");
 
 export function renderGallery(images) {
+
     gallery.innerHTML = images.map(image => createImageCard(image)).join("");
     if (lightbox) {
         lightbox.refresh();
@@ -30,13 +31,19 @@ loadMore.addEventListener("click", onLoadMore);
 let page = 1;
 
 export async function onLoadMore() {
+
     if (!currentQuery) {
         return;
     }
+
     page += 1;
     showLoader();
+
+
     try {
+
         const images = await fetchImages(currentQuery, page);
+
         if (!images || images.length === 0) {
             hideLoader();
             iziToast.error({
@@ -54,6 +61,7 @@ export async function onLoadMore() {
 
         const lastCard = gallery.lastElementChild;
         const cardHeight = lastCard.getBoundingClientRect().height;
+
         window.scrollBy({
             left: 0,
             top: cardHeight * 2,
@@ -62,6 +70,7 @@ export async function onLoadMore() {
 
         const totalHits = images.totalHits;
         const totalPages = Math.ceil(totalHits / 15);
+
         if (page >= totalPages) {
             loadMore.style.display = "none";
             iziToast.error({
@@ -72,8 +81,10 @@ export async function onLoadMore() {
                 messageColor: "white",
             });
         }
+
     } catch (error) {
         console.error(error.message);
+
     } finally {
         hideLoader();
     }
