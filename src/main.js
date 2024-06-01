@@ -5,12 +5,14 @@ const searchForm = document.querySelector(".form");
 const input = document.querySelector(".input");
 const loadMore = document.querySelector(".js-load-more");
 loadMore.style.display = "none";
+
 searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    clearGallery()
+    clearGallery();
     const query = input.value.trim();
     if (query.length === 0) {
         showError();
+        loadMore.style.display = "none";
         return;
     }
 
@@ -20,11 +22,9 @@ searchForm.addEventListener("submit", async (event) => {
     try {
         const images = await fetchImages(query);
         renderGallery(images);
-
     } catch (error) {
         console.log(error.message);
-    }
-    finally {
+    } finally {
         hideLoader();
     }
 });

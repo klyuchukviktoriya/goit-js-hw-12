@@ -2,8 +2,7 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-
-import { fetchImages } from "./pixabay-api.js";
+import { fetchImages, currentQuery } from "./pixabay-api.js";
 
 let lightbox;
 const gallery = document.querySelector(".gallery");
@@ -19,18 +18,26 @@ export function renderGallery(images) {
     loadMore.style.display = "block";
 }
 
-// -----------------------------------------------------------------
+export function updateGallery(images) {
+    gallery.insertAdjacentHTML("beforeend", images.map(image => createImageCard(image)).join(""));
+    if (lightbox) {
+        lightbox.refresh();
+    }
+}
 
 loadMore.addEventListener("click", onLoadMore);
 
 let page = 1;
 
 export async function onLoadMore() {
+    if (!currentQuery) {
+        return;
+    }
     page += 1;
     showLoader();
     try {
-        const data = await fetchImages(page);
-        if (!data) {
+        const images = await fetchImages(currentQuery, page);
+        if (!images || images.length === 0) {
             hideLoader();
             iziToast.error({
                 icon: "",
@@ -43,10 +50,7 @@ export async function onLoadMore() {
             return;
         }
 
-        gallery.insertAdjacentHTML("beforeend", data.map(image => createImageCard(image)).join(""));
-        if (lightbox) {
-            lightbox.refresh();
-        }
+        updateGallery(images);
 
         const lastCard = gallery.lastElementChild;
         const cardHeight = lastCard.getBoundingClientRect().height;
@@ -56,7 +60,9 @@ export async function onLoadMore() {
             behavior: "smooth"
         });
 
-        if (page >= totalHits) {
+        const totalHits = images.totalHits;
+        const totalPages = Math.ceil(totalHits / 15);
+        if (page >= totalPages) {
             loadMore.style.display = "none";
             iziToast.error({
                 icon: "",
@@ -66,7 +72,6 @@ export async function onLoadMore() {
                 messageColor: "white",
             });
         }
-
     } catch (error) {
         console.error(error.message);
     } finally {
