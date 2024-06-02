@@ -16,7 +16,12 @@ export function renderGallery(images) {
     } else {
         lightbox = new SimpleLightbox(".gallery a", { captionDelay: 250, captionsData: "alt" });
     }
-    loadMore.style.display = "block";
+    if (images.length > 0 && images.length < 14) {
+        loadMore.style.display = "none";
+    } else {
+        loadMore.style.display = "block";
+    }
+
 }
 
 export function updateGallery(images) {
@@ -38,7 +43,6 @@ export async function onLoadMore() {
 
     page += 1;
     showLoader();
-
 
     try {
 
@@ -68,19 +72,6 @@ export async function onLoadMore() {
             behavior: "smooth"
         });
 
-        const totalHits = images.totalHits;
-        const totalPages = Math.ceil(totalHits / 15);
-
-        if (page >= totalPages) {
-            loadMore.style.display = "none";
-            iziToast.error({
-                icon: "",
-                backgroundColor: "blue",
-                position: "topRight",
-                message: "&#11198; We're sorry, but you've reached the end of search results.",
-                messageColor: "white",
-            });
-        }
 
     } catch (error) {
         console.error(error.message);
@@ -91,6 +82,7 @@ export async function onLoadMore() {
 }
 
 function createImageCard(image) {
+
     return `
     <div class="photo-card">
       <a class="link" href="${image.largeImageURL}">
@@ -104,6 +96,7 @@ function createImageCard(image) {
       </a>
     </div>
   `;
+
 }
 
 export function showLoader() {

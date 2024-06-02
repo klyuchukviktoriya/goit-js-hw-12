@@ -30,7 +30,8 @@ export async function fetchImages(query, page = 1) {
 
     try {
         const { data } = await axios(`${BASE_URL}?${params}`);
-        if (data.hits.length === 0) {
+        const totalHits = data.totalHits;
+        if (totalHits === 0) {
             iziToast.error({
                 icon: "",
                 backgroundColor: "#ef4040",
@@ -38,7 +39,7 @@ export async function fetchImages(query, page = 1) {
                 message: "&#11198; Sorry, there are no images matching your search query. Please, try again!",
                 messageColor: "white",
             });
-            loadMore.style.display = "none";
+
         } else {
             return data.hits;
         }
