@@ -117,6 +117,7 @@ export function hideLoader() {
 }
 
 export function clearGallery() {
+    page = 1;
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
 }
